@@ -91,6 +91,10 @@
       "allowToChangeInstallationDirectory": true,
       "allowElevation": true,
       "createStartMenuShortcut": true,
+      "createDesktopShortcut": "always",
+      "shortcutName": "Lumora",
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
       "selectPerMachineByDefault": false,
       "license": "LICENSE",
       "uninstallDisplayName": "Uninstall Lumora",
@@ -98,6 +102,7 @@
     },
     "win": {
       "icon": "public/icon.ico",
+      "extraResources": ["public/icon.ico"],
       "target": [
         {
           "target": "nsis",

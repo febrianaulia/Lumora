@@ -12,6 +12,23 @@ const {
 } = require("electron");
 const path = require("path");
 
+const APP_USER_MODEL_ID = "com.febrianaulia.lumora";
+if (process.platform === "win32") {
+  app.setAppUserModelId(APP_USER_MODEL_ID);
+}
+
+function getWindowIcon() {
+  if (process.platform === "win32") {
+    return app.isPackaged
+      ? path.join(process.resourcesPath, "icon.ico")
+      : path.join(__dirname, "public", "icon.ico");
+  }
+  if (process.platform === "linux") {
+    return path.join(__dirname, "public/sized/256x256.png");
+  }
+  return undefined;
+}
+
 // -- RAM / performance flags ---------------------------------------------------
 // Low-RAM mode is ON by default. Disable it with LUMORA_LOW_RAM=0.
 // Honor the previous variable when the Lumora variable is not set.
@@ -500,10 +517,7 @@ function createWindow() {
     minWidth: 900,
     minHeight: 600,
     backgroundColor: "#0a0a0a",
-    icon:
-      process.platform === "linux"
-        ? path.join(__dirname, "public/sized/256x256.png")
-        : undefined,
+    icon: getWindowIcon(),
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
     trafficLightPosition: { x: 12, y: 12 },
     frame: process.platform !== "win32",
@@ -726,6 +740,7 @@ ipcMain.handle("open-pip-window", (_, { url, title, userAgent }) => {
     alwaysOnTop: true,
     title: title ? `${title} - Pop-out` : "Pop-out Player",
     backgroundColor: "#000000",
+    icon: getWindowIcon(),
     // Same custom title bar as the main window
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
     frame: process.platform !== "win32",
