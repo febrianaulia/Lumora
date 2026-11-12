@@ -80,6 +80,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function DownloadsPage({
+  platform,
   downloads,
   onDeleteDownload,
   onHistory,
@@ -96,6 +97,12 @@ export default function DownloadsPage({
   searchOpen: searchOpenProp = false,
   onSearchClose,
 }) {
+  const searchShortcutLabel =
+    platform === "darwin"
+      ? "⌘K"
+      : platform === "win32"
+        ? "Ctrl+Shift+K"
+        : "Ctrl+K";
   const [fileExistsCache, setFileExistsCache] = useState({});
   const [localFiles, setLocalFiles] = useState(
     () => storage.get("localFiles") || [],
@@ -132,7 +139,7 @@ export default function DownloadsPage({
     storage.set(STORAGE_KEYS.DL_SHOW_UNTRACKED, showUntracked);
   }, [showUntracked]);
 
-  // Sync externally-triggered open (Ctrl+K from App.jsx)
+  // Sync externally-triggered open from the platform-specific page-search shortcut.
   useEffect(() => {
     if (searchOpenProp) {
       setSearchOpen(true);
@@ -379,7 +386,7 @@ export default function DownloadsPage({
         · {allLocalItemsRaw.length} completed
       </div>
 
-      {/* ── Ctrl+K Search bar ─────────────────────────────────────────────── */}
+      {/* ── Downloads page search bar ───────────────────────────────────── */}
       {searchOpen && (
         <div className="dl-search-bar">
           <svg
@@ -464,7 +471,7 @@ export default function DownloadsPage({
             <button
               className="dl-toolbar__search-hint"
               onClick={() => setSearchOpen(true)}
-              title="Search (Ctrl+K)"
+              title={`Search (${searchShortcutLabel})`}
             >
               <svg
                 width="13"
@@ -479,7 +486,9 @@ export default function DownloadsPage({
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-              <span className="dl-toolbar__search-hint-key">Ctrl+K</span>
+              <span className="dl-toolbar__search-hint-key">
+                {searchShortcutLabel}
+              </span>
             </button>
           )}
         </div>

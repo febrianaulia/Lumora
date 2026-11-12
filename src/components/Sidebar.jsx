@@ -16,6 +16,7 @@ import {
 
 export default function Sidebar({
   page,
+  platform,
   onNavigate,
   onSearch,
   savedList,
@@ -30,6 +31,12 @@ export default function Sidebar({
   const dragItem = useRef(null);
   const dragNode = useRef(null);
   const seasonalEvent = useSeasonalEvent();
+  const searchShortcutLabel =
+    platform === "darwin"
+      ? "⌘F"
+      : platform === "win32"
+        ? "Ctrl+K"
+        : "Ctrl+F";
 
   // Tulisan merek: tampil di paling atas halaman, hilang saat di-scroll ke bawah
   const [atTop, setAtTop] = useState(true);
@@ -245,11 +252,11 @@ export default function Sidebar({
         <button
           className="nav-search"
           onClick={onSearch}
-          title="Search (⌘F)"
+          title={`Search (${searchShortcutLabel})`}
         >
           <SearchIcon />
           <span>Search</span>
-          <kbd>⌘F</kbd>
+          <kbd>{searchShortcutLabel}</kbd>
         </button>
         <SideBtn
           onClick={onShowShortcuts}

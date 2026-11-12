@@ -60,7 +60,13 @@ export default function App() {
     () => storage.get(STORAGE_KEYS.LIBRARY_SORT) || "manual",
   );
   const [showShortcuts, setShowShortcuts] = useState(false);
-  const [platform, setPlatform] = useState(null);
+  const [platform, setPlatform] = useState(() => {
+    const userAgent = navigator.userAgent;
+    if (/Windows/i.test(userAgent)) return "win32";
+    if (/Macintosh|Mac OS/i.test(userAgent)) return "darwin";
+    if (/Linux/i.test(userAgent)) return "linux";
+    return null;
+  });
 
   // Navigation history stack for Ctrl+Z back navigation
   const [navStack, setNavStack] = useState([]);
@@ -691,15 +697,28 @@ export default function App() {
   // ── Keyboard shortcuts ────────────────────────────────────────────────────
   useEffect(() => {
     const handler = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "f") {
+      const key = e.key.toLowerCase();
+      const isGlobalSearchShortcut =
+        platform === "darwin"
+          ? e.metaKey && !e.ctrlKey && !e.shiftKey && key === "f"
+          : platform === "win32"
+            ? e.ctrlKey && !e.metaKey && !e.shiftKey && key === "k"
+            : e.ctrlKey && !e.metaKey && !e.shiftKey && key === "f";
+      if (isGlobalSearchShortcut) {
         e.preventDefault();
         setShowSearch(true);
+        return;
       }
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        if (pageRef.current === "downloads") {
-          e.preventDefault();
-          setDlSearchOpen(true);
-        }
+      const isPageSearchShortcut =
+        platform === "darwin"
+          ? e.metaKey && !e.ctrlKey && !e.shiftKey && key === "k"
+          : platform === "win32"
+            ? e.ctrlKey && !e.metaKey && e.shiftKey && key === "k"
+            : e.ctrlKey && !e.metaKey && !e.shiftKey && key === "k";
+      if (pageRef.current === "downloads" && isPageSearchShortcut) {
+        e.preventDefault();
+        setDlSearchOpen(true);
+        return;
       }
       if (e.key === "Escape") {
         setShowSearch(false);
@@ -724,7 +743,7 @@ export default function App() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [navigateBack]);
+  }, [navigateBack, platform]);
 
   // ── Controller / gamepad navigation ─────────────────────────────────────
   const [gamepadEnabled, setGamepadEnabled] = useState(
@@ -997,6 +1016,7 @@ export default function App() {
       <div>
         <Sidebar
           page={page}
+          platform={platform}
           onNavigate={navigate}
           onSearch={() => setShowSearch(true)}
           savedList={savedList}
@@ -1133,10 +1153,12 @@ export default function App() {
                 apiKey={apiKey}
                 onChangeApiKey={changeApiKey}
                 initialSection={selected?.section}
+                platform={platform}
               />
             )}
             {page === "downloads" && (
               <DownloadsPage
+                platform={platform}
                 downloads={downloads}
                 onDeleteDownload={handleDeleteDownload}
                 onHistory={addHistory}
@@ -1434,7 +1456,10 @@ export default function App() {
           />
         )}
         {showShortcuts && (
-          <KeyboardShortcutsModal onClose={() => setShowShortcuts(false)} />
+          <KeyboardShortcutsModal
+            platform={platform}
+            onClose={() => setShowShortcuts(false)}
+          />
         )}
       </div>
     </ErrorBoundary>

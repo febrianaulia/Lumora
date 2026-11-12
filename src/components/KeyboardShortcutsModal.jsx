@@ -1,11 +1,23 @@
 // Keyboard Shortcuts reference modal
-export default function KeyboardShortcutsModal({ onClose }) {
+export default function KeyboardShortcutsModal({ onClose, platform }) {
+  const isMac = platform === "darwin";
+  const isWindows = platform === "win32";
   const shortcuts = [
-    { keys: ["Ctrl", "F"], desc: "Open search" },
-    { keys: ["Ctrl", "K"], desc: "Search on a page" },
+    {
+      keys: isMac ? ["⌘", "F"] : isWindows ? ["Ctrl", "K"] : ["Ctrl", "F"],
+      desc: "Open app search",
+    },
+    {
+      keys: isMac
+        ? ["⌘", "K"]
+        : isWindows
+          ? ["Ctrl", "Shift", "K"]
+          : ["Ctrl", "K"],
+      desc: "Search in Settings / Downloads",
+    },
     { keys: ["Esc"], desc: "Close search / modal" },
-    { keys: ["Ctrl", "Z"], desc: "Navigate back" },
-    { keys: ["Ctrl", "R"], desc: "Reload app" },
+    { keys: isMac ? ["⌘", "Z"] : ["Ctrl", "Z"], desc: "Navigate back" },
+    { keys: isMac ? ["⌘", "R"] : ["Ctrl", "R"], desc: "Reload app" },
     { keys: ["?"], desc: "Show this shortcuts overview" },
   ];
 

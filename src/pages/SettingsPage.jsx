@@ -2724,7 +2724,13 @@ const SECTION_NAV = [
   },
 ];
 
-function SettingsTopBar({ sectionRefs, contentRef }) {
+function SettingsTopBar({ sectionRefs, contentRef, platform }) {
+  const pageSearchShortcutLabel =
+    platform === "darwin"
+      ? "⌘K"
+      : platform === "win32"
+        ? "Ctrl+Shift+K"
+        : "Ctrl+K";
   const [searchOpen, setSearchOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -2869,7 +2875,14 @@ function SettingsTopBar({ sectionRefs, contentRef }) {
         setNavOpen(false);
         return;
       }
-      if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "f")) {
+      const key = e.key.toLowerCase();
+      const isPageSearchShortcut =
+        platform === "darwin"
+          ? e.metaKey && !e.ctrlKey && !e.shiftKey && key === "k"
+          : platform === "win32"
+            ? e.ctrlKey && !e.metaKey && e.shiftKey && key === "k"
+            : e.ctrlKey && !e.metaKey && !e.shiftKey && key === "k";
+      if (isPageSearchShortcut) {
         e.preventDefault();
         setSearchOpen(true);
         return;
@@ -2888,7 +2901,7 @@ function SettingsTopBar({ sectionRefs, contentRef }) {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [searchOpen]);
+  }, [platform, searchOpen]);
 
   // Close nav on outside click
   useEffect(() => {
@@ -3197,7 +3210,7 @@ function SettingsTopBar({ sectionRefs, contentRef }) {
                   letterSpacing: 0.5,
                 }}
               >
-                ⌘K
+                {pageSearchShortcutLabel}
               </span>
             </button>
           )}
@@ -3339,6 +3352,7 @@ export default function SettingsPage({
   apiKey,
   onChangeApiKey,
   initialSection,
+  platform,
 }) {
   const [downloadPath, setDownloadPath] = useState(
     () => storage.get(STORAGE_KEYS.DOWNLOAD_PATH) || "",
@@ -3615,7 +3629,11 @@ export default function SettingsPage({
       )}
 
       {/* ── Sticky search & navigation bar ── */}
-      <SettingsTopBar sectionRefs={sectionRefs} contentRef={contentRef} />
+      <SettingsTopBar
+        sectionRefs={sectionRefs}
+        contentRef={contentRef}
+        platform={platform}
+      />
 
       <div
         ref={contentRef}
