@@ -1,6 +1,3 @@
-// -- Streambert main process entry point ---------------------------------------
-// Responsible for: window creation, session setup, ad-blocking, scheduled
-// backup trigger, and app lifecycle. All heavy IPC logic lives in src/ipc/.
 
 const {
   app,
@@ -12,32 +9,31 @@ const {
 } = require("electron");
 const path = require("path");
 
-// -- RAM / performance flags ---------------------------------------------------
-// Low-RAM mode is ON by default. Disable it with STREAMBERT_LOW_RAM=0.
-if (process.env.STREAMBERT_LOW_RAM === undefined) {
-  process.env.STREAMBERT_LOW_RAM = "1";
+// -- Lumora main process entry point ---------------------------------------
+// Responsible for: window creation, session setup, ad-blocking, scheduled
+// backup trigger, and app lifecycle. All heavy IPC logic lives in src/ipc/.
+
+/* -- RAM / performance flags ------------------------------------------------ */
+if (process.env.LUMORA_LOW_RAM === undefined) {
+  process.env.LUMORA_LOW_RAM = "1";
 }
-if (process.env.STREAMBERT_LOW_RAM === "1") {
+if (process.env.LUMORA_LOW_RAM === "1") {
   app.commandLine.appendSwitch(
     "js-flags",
     "--max-old-space-size=256 --expose-gc",
   );
-  console.log("STREAMBERT_LOW_RAM mode on");
-  // Run the network stack in the browser process → one less utility process
+  console.log("LUMORA_LOW_RAM mode on");
   app.commandLine.appendSwitch("enable-features", "NetworkServiceInProcess2");
-  // Cap disk cache and limit renderer processes
   app.commandLine.appendSwitch("disk-cache-size", String(80 * 1024 * 1024));
   app.commandLine.appendSwitch("renderer-process-limit", "3");
 } else {
-  console.log("STREAMBERT_LOW_RAM mode off");
+  console.log("LUMORA_LOW_RAM mode off");
 }
 
-// -- Startup benchmark ---------------------------------------------------------
 const _t0 = Date.now();
 const _bench = (label) =>
   console.log(`[boot] ${label}: +${Date.now() - _t0}ms`);
 
-// -- Sub-modules ---------------------------------------------------------------
 const blockStats = require("./src/ipc/blockStats");
 const siteTweaks = require("./src/ipc/siteTweaks");
 const storageIpc = require("./src/ipc/storage");
@@ -47,7 +43,6 @@ const hianimeIpc = require("./src/ipc/hianime");
 const playerIpc = require("./src/ipc/player");
 const discordRpc = require("./src/ipc/discordRpc");
 
-// -- Ad/tracker block list -----------------------------------------------------
 const BLOCKED_HOSTS = [
   "*://www.google-analytics.com/*",
   "*://analytics.google.com/*",
@@ -278,33 +273,23 @@ const BLOCKED_HOSTS = [
   "*://cdn.pncloudfl.com.cdn.cloudflare.net/*",
 ];
 
-// -- Module-level state --------------------------------------------------------
 let mainWindow = null;
 const getMainWindow = () => mainWindow;
 
 const playerWcIds = new Set();
 let sessionsConfigured = false;
 
-// Returns the default Chromium user agent without Electron/app identifiers.
 function buildCleanUserAgent() {
   return app.userAgentFallback
     .replace(/\s?Electron\/\S+/i, "")
-    .replace(/\s?streambert\/\S+/i, "")
+    .replace(/\s?lumora\/\S+/i, "")
     .trim();
 }
 
-// Single source of truth for the cleaned UA; the renderer reads it synchronously
-// via preload (window.electron.cleanUserAgent) for per-source player UAs.
 ipcMain.on("get-clean-user-agent", (event) => {
   event.returnValue = buildCleanUserAgent();
 });
 
-// -- Popup handling ------------------------------------------------------------
-// Webview/pop-out popups are denied. Some players (e.g. Vidrift) test
-// window.open() on the first click and show "Remove sandboxing to enable
-// playback" when it returns null. For those hosts, hand out a real but
-// hidden, stopped window instead (window.open succeeds, nothing is shown).
-// Add a host here if another player shows the same message.
 const POPUP_STUB_HOSTS = ["vidrift.net", "vidrift.in"];
 
 function urlMatchesHosts(url, hosts) {
@@ -335,8 +320,6 @@ function installPopupHandler(wc) {
   wc.on("did-create-window", (win) => {
     try {
       win.webContents.setAudioMuted(true);
-      // Don't load the popup target; keep the window object alive briefly so
-      // `popup.closed` stays false for the opener's check.
       win.webContents.stop();
       setTimeout(() => {
         if (!win.isDestroyed()) win.destroy();
@@ -345,7 +328,6 @@ function installPopupHandler(wc) {
   });
 }
 
-// Sets the YouTube consent cookie (suppresses the consent gate) in a session.
 function setYoutubeConsentCookies(sess) {
   const ytCookie = {
     url: "https://www.youtube.com",
@@ -373,18 +355,8 @@ function setupSession(playerSession, trailerSession) {
     callback({ responseHeaders: headers });
   };
 
-  // Use the REAL Chromium UA of this Electron build, only without the
-  // "Electron/x.y.z" and app-name tokens.
   const UA = buildCleanUserAgent();
-  // The player session keeps Electron's untouched default UA: setUserAgent() is
-  // applied only after the first <webview> already started loading, so the first
-  // player used the default UA and passed cloudflare Turnstile, while every later player
-  // used the modified UA and failed with error 600010.
-  // playerSession.setUserAgent(UA); <--- removed on purpose
 
-  // No browser downloads from player/trailer pages (also covers the pop-out,
-  // which uses the player partition). Video/subtitle downloads go exclusively
-  // through the app's own download manager, never through the webview.
   const blockDownloads = (event) => event.preventDefault();
   playerSession.on("will-download", blockDownloads);
   trailerSession.on("will-download", blockDownloads);
@@ -398,12 +370,10 @@ function setupSession(playerSession, trailerSession) {
     stripHeaders,
   );
 
-  // Trailer: block ads only (no media intercept needed)
   trailerSession.webRequest.onBeforeRequest({ urls: BLOCKED_HOSTS }, (_, cb) =>
     cb({ cancel: true }),
   );
 
-  // Player session: block ads + intercept m3u8/vtt URLs for renderer
   const MEDIA_URLS = [
     "*://*/*.m3u8*",
     "*://*/*.m3u8",
@@ -420,7 +390,6 @@ function setupSession(playerSession, trailerSession) {
         callback({ cancel: true });
         return;
       }
-      // Media URL: check if it also happens to be on a blocked domain
       try {
         const host = new URL(url).hostname;
         const blocked = BLOCKED_HOSTS.some((pat) => {
@@ -435,7 +404,6 @@ function setupSession(playerSession, trailerSession) {
           return;
         }
       } catch {}
-      // Pass through + notify renderer
       const mw = getMainWindow();
       if (mw && !mw.isDestroyed()) {
         if (url.includes(".m3u8")) {
@@ -452,12 +420,6 @@ function setupSession(playerSession, trailerSession) {
     },
   );
 
-  // Record the real request headers of captured m3u8 requests so the external
-  // player can replay them (hosts often 403 without Referer/Origin/UA).
-  // Cookies are intentionally NOT captured or forwarded.
-  // Performance: the request is released immediately and recorded only once
-  // per URL, so live playlists that are re-requested every few seconds add
-  // no latency or repeated work.
   playerSession.webRequest.onBeforeSendHeaders(
     { urls: ["*://*/*.m3u8*", "*://*/*.m3u8"] },
     (details, callback) => {
@@ -484,7 +446,6 @@ function setupSession(playerSession, trailerSession) {
     },
   );
 
-  // YouTube consent cookie → suppress consent gate (trailer session only)
   setYoutubeConsentCookies(trailerSession);
 }
 
@@ -513,32 +474,24 @@ function createWindow() {
       webviewTag: true,
       backgroundThrottling: true,
       spellcheck: false,
-      // Caps the renderer's V8 heap + exposes gc() for manual GC hints after navigation
       additionalArguments:
-        process.env.STREAMBERT_LOW_RAM === "1"
+        process.env.LUMORA_LOW_RAM === "1"
           ? ["--js-flags=--max-old-space-size=256 --expose-gc"]
           : [],
     },
   });
 
-  // Force long-lived disk caching for TMDB images in the default session.
   session.defaultSession.webRequest.onHeadersReceived(
     { urls: ["*://image.tmdb.org/*"] },
     (details, callback) => {
       const headers = { ...details.responseHeaders };
-      headers["cache-control"] = ["public, max-age=604800, immutable"]; // 7 days
+      headers["cache-control"] = ["public, max-age=604800, immutable"];
       delete headers["pragma"];
       delete headers["expires"];
       callback({ responseHeaders: headers });
     },
   );
 
-  // -- Lazy session setup ----------------------------------------------------
-  // Player/trailer sessions are configured on the first webview attach or
-  // when the pop-out window opens, whichever comes first.
-
-  // Configure the player/trailer sessions BEFORE the guest is created, so the
-  // very first player load already has ad blocking + document-start guards.
   mainWindow.webContents.on("will-attach-webview", () => {
     if (sessionsConfigured) return;
     sessionsConfigured = true;
@@ -548,7 +501,6 @@ function createWindow() {
     );
   });
 
-  // Block popups from webviews, intercept fullscreen, lazy-init sessions
   mainWindow.webContents.on("did-attach-webview", (_, wc) => {
     if (!sessionsConfigured) {
       sessionsConfigured = true;
@@ -557,12 +509,10 @@ function createWindow() {
       setupSession(playerSession, trailerSession);
     }
 
-    // Track player webviews for cleanup on player-stopped
     try {
       if (wc.session === session.fromPartition("persist:player")) {
         playerWcIds.add(wc.id);
         wc.once("destroyed", () => playerWcIds.delete(wc.id));
-        // Per-site CSS (e.g. show only the player on KinoHub)
         siteTweaks.attach(wc);
       }
     } catch {}
@@ -578,7 +528,6 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, "dist/index.html"));
 
-  // Trigger scheduled backup after load
   mainWindow.webContents.once("did-finish-load", () => {
     _bench("renderer loaded");
     const sbSettings = storageIpc.loadScheduledBackupSettings();
@@ -587,7 +536,6 @@ function createWindow() {
     }
   });
 
-  // Intercept close if downloads are active
   let closeResponsePending = false;
   mainWindow.on("close", (e) => {
     const running = downloadsIpc
@@ -614,7 +562,6 @@ function createWindow() {
   });
 }
 
-// -- Register all IPC modules --------------------------------------------------
 storageIpc.register();
 downloadsIpc.register(getMainWindow);
 subtitlesIpc.register({
@@ -628,17 +575,9 @@ playerIpc.register(getMainWindow, {
 blockStats.init(getMainWindow);
 discordRpc.register(ipcMain);
 
-// get-block-stats lives with its data
 ipcMain.handle("get-block-stats", () => blockStats.getBlockStats());
 
-// -- Player memory cleanup ---------------------------------------------
-// Called by MoviePage / TVPage on component unmount.
-// Mutes the tracked player webview WebContents and triggers GC hints.
-// The <webview> teardown itself is left to Electron (no manual destroy).
 ipcMain.on("player-stopped", () => {
-  // Step 1: Only mute the tracked player WebContents. They must NOT be destroyed
-  // manually with wc.destroy(): the <webview> element removal in the renderer
-  // already tears the guest down cleanly.
   for (const id of playerWcIds) {
     try {
       const wc = webContents.fromId(id);
@@ -651,10 +590,6 @@ ipcMain.on("player-stopped", () => {
   }
   playerWcIds.clear();
 
-  // Step 2: HTTP/shader cache flushing of the player session was removed on
-  // purpose.
-
-  // Step 3: GC hints
   if (typeof global.gc === "function") global.gc();
   const mw = mainWindow;
   if (mw && !mw.isDestroyed()) {
@@ -664,8 +599,6 @@ ipcMain.on("player-stopped", () => {
   }
 });
 
-// -- Desktop notifications -----------------------------------------------------
-// Called from the renderer whenever it wants a native OS notification.
 ipcMain.handle(
   "show-notification",
   (_event, { title, body, silent = false }) => {
@@ -681,9 +614,6 @@ ipcMain.handle(
   },
 );
 
-// -- Picture-in-Picture / Pop-Out window --------------------------------------
-// Opens the player URL in a small always-on-top BrowserWindow (full site UI,
-// with subtitles and controls). The Main Window closes the stream to avoid duplication.
 let pipWindow = null;
 let pipUaCustom = false;
 const getPipWindow = () => pipWindow;
@@ -691,7 +621,6 @@ const getPipWindow = () => pipWindow;
 ipcMain.handle("open-pip-window", (_, { url, title, userAgent }) => {
   if (!url || url === "about:blank") return { ok: false, reason: "no-url" };
 
-  // Guarantee tracker/ad blocking is active in persist:player before any load
   if (!sessionsConfigured) {
     sessionsConfigured = true;
     const playerSession = session.fromPartition("persist:player");
@@ -699,15 +628,12 @@ ipcMain.handle("open-pip-window", (_, { url, title, userAgent }) => {
     setupSession(playerSession, trailerSession);
   }
 
-  // Per-source UA (null = Electron default). loadURL's userAgent sticks to the
-  // WebContents, so always pass the explicit value when reusing the window.
   const loadOpts = {};
   if (typeof userAgent === "string" && userAgent) {
     loadOpts.userAgent = userAgent;
   }
 
   if (pipWindow && !pipWindow.isDestroyed()) {
-    // Drop a previously applied custom UA when the new source uses the default
     if (pipUaCustom && !loadOpts.userAgent) {
       pipWindow.webContents.setUserAgent(app.userAgentFallback);
     }
@@ -725,23 +651,19 @@ ipcMain.handle("open-pip-window", (_, { url, title, userAgent }) => {
     alwaysOnTop: true,
     title: title ? `${title} - Pop-out` : "Pop-out Player",
     backgroundColor: "#000000",
-    // Same custom title bar as the main window
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
     frame: process.platform !== "win32",
     webPreferences: {
       partition: "persist:player",
       nodeIntegration: false,
       contextIsolation: true,
-      // Injects the custom title bar and wires window-control IPC
       preload: path.join(__dirname, "popout-preload.js"),
     },
   });
 
-  // Block all popup windows from the streaming site and any nested frames
   installPopupHandler(pipWindow.webContents);
   siteTweaks.attach(pipWindow.webContents);
 
-  // If the site uses <webview> elements (unlikely but safe), block there too
   pipWindow.webContents.on("did-attach-webview", (_, wc) => {
     wc.setWindowOpenHandler(() => ({ action: "deny" }));
   });
@@ -749,7 +671,6 @@ ipcMain.handle("open-pip-window", (_, { url, title, userAgent }) => {
   pipUaCustom = !!loadOpts.userAgent;
   pipWindow.loadURL(url, loadOpts);
 
-  // Push maximize state into the popout renderer so the title bar icon updates
   pipWindow.on("maximize", () => {
     if (!pipWindow.isDestroyed())
       pipWindow.webContents.send("popout-window-maximized", true);
@@ -782,7 +703,6 @@ ipcMain.handle("get-pip-webcontents-id", () => {
   return null;
 });
 
-// -- Popout window controls (used by popout-preload.js title bar buttons) -----
 ipcMain.handle("popout-window-minimize", () => {
   if (pipWindow && !pipWindow.isDestroyed()) pipWindow.minimize();
 });
@@ -800,7 +720,6 @@ ipcMain.handle("popout-window-is-maximized", () => {
     : false;
 });
 
-// -- Single-instance lock ------------------------------------------------------
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
