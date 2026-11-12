@@ -1,7 +1,7 @@
 {
   "name": "lumora",
   "version": "2.7.0",
-  "description": "Streambert Desktop App",
+  "description": "Lumora Desktop App",
   "author": {
     "name": "Febrian Aulia",
     "email": "anonyson@proton.me"
@@ -93,13 +93,18 @@
       "createStartMenuShortcut": true,
       "selectPerMachineByDefault": false,
       "license": "LICENSE",
-      "uninstallDisplayName": "Uninstall Streambert",
+      "uninstallDisplayName": "Uninstall Lumora",
       "installerSidebar": "public/installer-sidebar.bmp"
     },
     "win": {
       "icon": "public/icon.png",
       "target": [
-        "nsis"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
     },
     "mac": {
