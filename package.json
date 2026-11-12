@@ -1,7 +1,8 @@
+
 {
   "name": "lumora",
   "version": "2.7.0",
-  "description": "Streambert Desktop App",
+  "description": "Lumora — A Cinematic Media Experience",
   "author": {
     "name": "Febrian Aulia",
     "email": "anonyson@proton.me"
@@ -93,7 +94,7 @@
       "createStartMenuShortcut": true,
       "selectPerMachineByDefault": false,
       "license": "LICENSE",
-      "uninstallDisplayName": "Uninstall Streambert",
+      "uninstallDisplayName": "Uninstall Lumora",
       "installerSidebar": "public/installer-sidebar.bmp"
     },
     "win": {
@@ -159,11 +160,11 @@
       "icon": "public/sized",
       "desktop": {
         "entry": {
-          "Name": "Streambert",
-          "Comment": "Streambert Desktop App",
+          "Name": "Lumora",
+          "Comment": "Lumora — A Cinematic Media Experience",
           "Categories": "AudioVideo;Video;Player;Multimedia;Internet;",
           "Icon": "streambert",
-          "StartupWMClass": "Streambert"
+          "StartupWMClass": "Lumora"
         }
       }
     },
