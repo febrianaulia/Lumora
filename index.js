@@ -1,4 +1,4 @@
-// -- Streambert main process entry point ---------------------------------------
+// -- Lumora main process entry point ---------------------------------------
 // Responsible for: window creation, session setup, ad-blocking, scheduled
 // backup trigger, and app lifecycle. All heavy IPC logic lives in src/ipc/.
 
@@ -13,23 +13,24 @@ const {
 const path = require("path");
 
 // -- RAM / performance flags ---------------------------------------------------
-// Low-RAM mode is ON by default. Disable it with STREAMBERT_LOW_RAM=0.
-if (process.env.STREAMBERT_LOW_RAM === undefined) {
-  process.env.STREAMBERT_LOW_RAM = "1";
+// Low-RAM mode is ON by default. Disable it with LUMORA_LOW_RAM=0.
+// Honor the previous variable when the Lumora variable is not set.
+if (process.env.LUMORA_LOW_RAM === undefined) {
+  process.env.LUMORA_LOW_RAM = process.env.STREAMBERT_LOW_RAM ?? "1";
 }
-if (process.env.STREAMBERT_LOW_RAM === "1") {
+if (process.env.LUMORA_LOW_RAM === "1") {
   app.commandLine.appendSwitch(
     "js-flags",
     "--max-old-space-size=256 --expose-gc",
   );
-  console.log("STREAMBERT_LOW_RAM mode on");
+  console.log("LUMORA_LOW_RAM mode on");
   // Run the network stack in the browser process → one less utility process
   app.commandLine.appendSwitch("enable-features", "NetworkServiceInProcess2");
   // Cap disk cache and limit renderer processes
   app.commandLine.appendSwitch("disk-cache-size", String(80 * 1024 * 1024));
   app.commandLine.appendSwitch("renderer-process-limit", "3");
 } else {
-  console.log("STREAMBERT_LOW_RAM mode off");
+  console.log("LUMORA_LOW_RAM mode off");
 }
 
 // -- Startup benchmark ---------------------------------------------------------
@@ -289,7 +290,7 @@ let sessionsConfigured = false;
 function buildCleanUserAgent() {
   return app.userAgentFallback
     .replace(/\s?Electron\/\S+/i, "")
-    .replace(/\s?streambert\/\S+/i, "")
+    .replace(/\s?lumora\/\S+/i, "")
     .trim();
 }
 
@@ -515,7 +516,7 @@ function createWindow() {
       spellcheck: false,
       // Caps the renderer's V8 heap + exposes gc() for manual GC hints after navigation
       additionalArguments:
-        process.env.STREAMBERT_LOW_RAM === "1"
+        process.env.LUMORA_LOW_RAM === "1"
           ? ["--js-flags=--max-old-space-size=256 --expose-gc"]
           : [],
     },
