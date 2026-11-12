@@ -97,7 +97,7 @@
       "installerSidebar": "public/installer-sidebar.bmp"
     },
     "win": {
-      "icon": "public/icon.png",
+      "icon": "public/icon.ico",
       "target": [
         {
           "target": "nsis",
