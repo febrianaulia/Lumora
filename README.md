@@ -1,7 +1,7 @@
 # Lumora
 
 <p align="center">
-  <img src="public/logo.svg" alt="Lumora Logo" width="240" />
+  <img src="public/logo.svg" alt="Lumora Logo" width="360" />
 </p>
 
 <h1 align="center">Lumora</h1>
@@ -191,6 +191,22 @@ Visit [GitHub Actions](https://github.com/febrianaulia/Lumora/actions) to view w
 
 ---
 
+## About the Developer
+
+<p align="center">
+  <strong>Febrian Aulia</strong>
+  <br/>
+  Founder & Developer of Lumora
+  <br/>
+  📍 Bukittinggi, Indonesia 🇮🇩
+</p>
+
+<p align="center">
+  Lumora is an independent project developed with a passion for technology, software development, and cinematic entertainment experiences.
+</p>
+
+---
+
 ## Credits & Acknowledgements
 
 Lumora is an independently maintained modified derivative of the open-source **[Streambert](https://github.com/truelockmc/streambert)** project.
@@ -230,13 +246,17 @@ However, external APIs, media providers, and integrated third-party services may
 ---
 
 <p align="center">
-  <img src="public/logo.svg" alt="Lumora Logo" width="90" />
+  <img src="public/logo.svg" alt="Lumora Logo" width="140" />
 </p>
 
 <h2 align="center">Lumora</h2>
 
 <p align="center">
-  A better way to experience entertainment.
+  <strong>A better way to experience entertainment.</strong>
+</p>
+
+<p align="center">
+  Created with passion in Bukittinggi, Indonesia.
 </p>
 
 <p align="center">
