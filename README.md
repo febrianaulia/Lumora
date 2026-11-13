@@ -1,3 +1,4 @@
+
 # Lumora
 
 <p align="center">
@@ -116,6 +117,10 @@ See [TMDB Tutorial](tmdb-tutorial.md) for instructions on obtaining an API token
 
 ## Installation
 
+On first launch you'll be prompted to enter your TMDB API key. ([Guide on how to get one](tmdb-tutorial.md))
+
+It's saved locally, you only need to do this once.
+
 ### macOS
 
 1. Visit the [Lumora Releases](https://github.com/febrianaulia/Lumora/releases) page.
@@ -126,9 +131,18 @@ See [TMDB Tutorial](tmdb-tutorial.md) for instructions on obtaining an API token
 
 If macOS blocks the application because it is not signed and notarized, authorization may be required through System Settings → Privacy & Security.
 
-### Windows and Linux
+### Windows (x64)
 
-Platform-specific builds may be made available in future releases. Check the Releases page for available packages.
+1. Visit the [Lumora v2.7.0 Release](https://github.com/febrianaulia/Lumora/releases/tag/v2.7.0).
+2. Download `Lumora.Setup.2.7.0.exe`.
+3. Run the installer and follow the installation instructions.
+4. Launch Lumora from the Start menu or desktop shortcut.
+
+**Note:** The Windows installer is currently unsigned. Windows SmartScreen may display a security warning when launching the installer. Only download Lumora from the official GitHub repository.
+
+### Linux
+
+A Linux installer is not currently available. Linux support may be provided in future releases.
 
 ---
 
