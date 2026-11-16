@@ -53,20 +53,35 @@ With an immersive interface, smooth navigation, and customizable settings, Lumor
 
 ## Screenshots
 
-<table>
-  <tr>
-    <td width="50%"><img src="screenshots/lumora-home.png" alt="Lumora Home screen with featured films and recommendations" /><br/><strong>Home</strong></td>
-    <td width="50%"><img src="screenshots/lumora-library.png" alt="Lumora Library with watch history and continue watching" /><br/><strong>Library</strong></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="screenshots/lumora-downloads.png" alt="Lumora Downloads screen" /><br/><strong>Downloads</strong></td>
-    <td width="50%"><img src="screenshots/lumora-anime-player.png" alt="Lumora anime details and player area" /><br/><strong>Anime player</strong> <em>(layar pemutar; sumber video sedang memuat)</em></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="screenshots/lumora-settings.png" alt="Lumora application settings" /><br/><strong>Settings</strong></td>
-    <td width="50%"><img src="screenshots/lumora-category-indonesia.png" alt="Lumora Indonesian film category" /><br/><strong>Kategori Indonesia</strong></td>
-  </tr>
-</table>
+<p align="center">
+  <strong>Home</strong><br/>
+  <img src="screenshots/lumora-home.png" width="100%" alt="Lumora Home with featured movie and recommendations" />
+</p>
+
+<p align="center">
+  <strong>Library</strong><br/>
+  <img src="screenshots/lumora-library.png" width="100%" alt="Lumora Library showing watch history" />
+</p>
+
+<p align="center">
+  <strong>Downloads</strong><br/>
+  <img src="screenshots/lumora-downloads.png" width="100%" alt="Lumora Downloads page" />
+</p>
+
+<p align="center">
+  <strong>Settings</strong><br/>
+  <img src="screenshots/lumora-settings.png" width="100%" alt="Lumora application settings" />
+</p>
+
+<p align="center">
+  <strong>Anime</strong><br/>
+  <img src="screenshots/lumora-anime.png" width="100%" alt="Demon Slayer anime movie details in Lumora" />
+</p>
+
+<p align="center">
+  <strong>Kategori Action</strong><br/>
+  <img src="screenshots/lumora-category-action.png" width="100%" alt="Lumora Action movie category" />
+</p>
 
 ---
 
