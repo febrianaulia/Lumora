@@ -10,7 +10,7 @@
 const net = require("net");
 const path = require("path");
 
-const CLIENT_ID = "1522558650076627076";
+const CLIENT_ID = "1571756198385160242";
 
 const MIN_SEND_INTERVAL_MS = 15000;
 // How long to wait before retrying a failed/absent Discord connection.

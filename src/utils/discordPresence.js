@@ -1,13 +1,14 @@
-// ── Discord Rich Presence (renderer side) ──────────────────────────────────
-// Builds the small activity payload from whatever the user is currently
-// looking at and forwards it to the main process (src/ipc/discordRpc.js).
+
+// ── Lumora Discord Rich Presence ──────────────────────────────────────────
+// Builds activity payload and forwards it to the Electron main process.
 
 import { storage, STORAGE_KEYS, isElectron } from "./storage";
 
-// Small badge shown as the "small_image" next to the cover.
+// Lumora branding
 const APP_ICON_URL =
-  "https://raw.githubusercontent.com/truelockmc/streambert/main/public/icon.png";
-const GITHUB_URL = "https://github.com/truelockmc/streambert";
+  "https://raw.githubusercontent.com/febrianaulia/Lumora/main/public/icon.png";
+
+const GITHUB_URL = "https://github.com/febrianaulia/Lumora";
 
 export function readDiscordRpcSettings() {
   return {
@@ -19,7 +20,7 @@ export function readDiscordRpcSettings() {
   };
 }
 
-/** Push the enabled/disabled state to the main process (connects/disconnects). */
+/** Push enabled/disabled state to the main process. */
 export function applyDiscordRpcEnabled(enabled) {
   if (!isElectron || !window.electron?.discordRpcSetEnabled) return;
   window.electron.discordRpcSetEnabled(!!enabled);
@@ -27,45 +28,48 @@ export function applyDiscordRpcEnabled(enabled) {
 
 function baseAssets(posterUrl, settings) {
   const assets = {};
+
   if (settings.showCover && posterUrl) {
     assets.large_image = posterUrl;
     assets.small_image = APP_ICON_URL;
-    assets.small_text = "Streambert";
+    assets.small_text = "Lumora";
   } else {
     assets.large_image = APP_ICON_URL;
   }
+
   return assets;
 }
 
 function buttons(settings) {
   return settings.showButton
-    ? [{ label: "Watch media for free", url: GITHUB_URL }]
+    ? [{ label: "Open Lumora", url: GITHUB_URL }]
     : undefined;
 }
 
 /**
- * @param {object} info
- *   info.title        - movie/show title
- *   info.subtitle     - e.g. "Film" or "S2 · E5"
- *   info.posterUrl    - full https poster URL (imgUrl(...) result) or null
- *   info.startedAt    - ms epoch timestamp the item was opened
+ * info.title      - movie/show title
+ * info.subtitle   - e.g. "Film" or "S2 · E5"
+ * info.posterUrl  - full HTTPS poster URL or null
+ * info.startedAt  - timestamp in milliseconds
  */
 export function sendWatchingActivity(info, settings) {
   if (!isElectron || !window.electron?.discordRpcUpdateActivity) return;
   if (!settings.enabled) return;
 
   const activity = {
-    type: 3, // "Watching"
-    details: info.title?.slice(0, 128) || "Streambert",
-    state: (info.subtitle || "Streambert").slice(0, 128),
+    type: 3,
+    details: info.title?.slice(0, 128) || "Watching Lumora",
+    state: (info.subtitle || "Lumora").slice(0, 128),
     assets: {
       ...baseAssets(info.posterUrl, settings),
-      large_text: info.title?.slice(0, 128) || "Streambert",
+      large_text: info.title?.slice(0, 128) || "Lumora",
     },
   };
+
   if (settings.showTimestamp && info.startedAt) {
     activity.timestamps = { start: info.startedAt };
   }
+
   const btns = buttons(settings);
   if (btns) activity.buttons = btns;
 
@@ -79,8 +83,13 @@ export function sendIdleActivity(settings) {
   const activity = {
     type: 3,
     details: "Idling",
-    assets: { large_image: APP_ICON_URL, large_text: "Streambert" },
+    state: "Lumora",
+    assets: {
+      large_image: APP_ICON_URL,
+      large_text: "Lumora",
+    },
   };
+
   const btns = buttons(settings);
   if (btns) activity.buttons = btns;
 

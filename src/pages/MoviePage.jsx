@@ -802,6 +802,11 @@ export default function MoviePage({
         dl.status === "downloading"),
   );
 
+  const castList = Array.isArray(credits?.cast) ? credits.cast.slice(0, 16) : [];
+  const director = Array.isArray(credits?.crew)
+    ? credits.crew.find((c) => c.job === "Director")?.name
+    : null;
+
   return (
     <div className="fade-in">
       <div className="detail-hero">
@@ -812,6 +817,14 @@ export default function MoviePage({
           }}
         />
         <div className="detail-gradient" />
+        <button
+          className="detail-back"
+          onClick={onBack}
+          aria-label="Back"
+          title="Back"
+        >
+          <BackIcon />
+        </button>
         <div className="detail-content">
           <div className="detail-poster" style={{ position: "relative" }}>
             {d.poster_path ? (
@@ -837,15 +850,16 @@ export default function MoviePage({
             )}
           </div>
           <div className="detail-info">
-            <div className="detail-type">Movie</div>
             <div className="detail-title">{title}</div>
-            <div className="genres">
-              {displayGenres.map((g) => (
-                <span key={g.id} className="genre-tag">
-                  {g.name}
-                </span>
-              ))}
-            </div>
+            {displayGenres.length > 0 && (
+              <div className="genres">
+                {displayGenres.map((g) => (
+                  <span key={g.id} className="genre-tag">
+                    {g.name}
+                  </span>
+                ))}
+              </div>
+            )}
             <div className="detail-meta">
               {displayScore && (
                 <span className="detail-rating">
@@ -857,36 +871,43 @@ export default function MoviePage({
               {d.original_language && (
                 <span>{d.original_language?.toUpperCase()}</span>
               )}
+              {rating.cert && (
+                <div
+                  className={`age-rating-pill${restricted ? " age-rating-pill--restricted" : ""}`}
+                >
+                  {restricted ? (
+                    <RatingLockIcon size={13} />
+                  ) : (
+                    <RatingShieldIcon size={13} />
+                  )}
+                  <span className="age-rating-pill-cert">{rating.cert}</span>
+                  {restricted && (
+                    <span className="age-rating-pill-label">
+                      Inappropriate for your age setting
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
-            {rating.cert && (
-              <div
-                className={`age-rating-pill${restricted ? " age-rating-pill--restricted" : ""}`}
-              >
-                {restricted ? (
-                  <RatingLockIcon size={13} />
-                ) : (
-                  <RatingShieldIcon size={13} />
-                )}
-                <span className="age-rating-pill-cert">{rating.cert}</span>
-                {restricted && (
-                  <span className="age-rating-pill-label">
-                    Inappropriate for your age setting
-                  </span>
-                )}
+            <p className="detail-overview">{displayOverview}</p>
+            {director && (
+              <div className="detail-credit">
+                <span>Directed by</span>
+                {director}
               </div>
             )}
-            <p className="detail-overview">{displayOverview}</p>
             {!isWatched && displayPct > 0 && (
-              <div className="progress-bar-row" style={{ marginBottom: 12 }}>
-                <div className="progress-bar-outer">
+              <div className="detail-progress">
+                <div className="detail-progress__bar">
                   <div
-                    className="progress-bar-fill"
+                    className="detail-progress__fill"
                     style={{ width: `${Math.min(displayPct, 100)}%` }}
                   />
                 </div>
-                <span style={{ fontSize: 12, color: "var(--text3)" }}>
-                  {progressLabel}
-                </span>
+                <div className="detail-progress__text">
+                  <span>{`${Math.round(Math.min(displayPct, 100))}% watched`}</span>
+                  <span>{progressLabel}</span>
+                </div>
               </div>
             )}
             <div className="detail-actions">
@@ -911,66 +932,65 @@ export default function MoviePage({
                   <PlayIcon /> {playing ? "Restart" : "Play"}
                 </button>
               )}
-              {trailerKey &&
-                (restricted ? (
-                  <button
-                    className="btn btn-secondary btn-restricted"
-                    disabled
-                    title="Inappropriate for your age rating setting"
-                  >
-                    🔒 Trailer
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => setShowTrailer(true)}
-                  >
-                    <TrailerIcon /> Trailer
-                  </button>
-                ))}
-              <button
-                className="btn btn-secondary"
-                onClick={() => setShowCast(true)}
-              >
-                <CastIcon /> Cast
-              </button>
-              <button className="btn btn-secondary" onClick={onSave}>
-                {isSaved ? <BookmarkFillIcon /> : <BookmarkIcon />}
-                {isSaved ? "Saved" : "Save"}
-              </button>
-              {!isUnreleased &&
-                (isWatched ? (
-                  <button
-                    className="btn btn-ghost watched-btn"
-                    onClick={() => onMarkUnwatched?.(progressKey)}
-                  >
-                    <WatchedIcon size={16} /> Watched
-                  </button>
-                ) : (
-                  <>
+              <div className="detail-actions__group">
+                {trailerKey &&
+                  (restricted ? (
                     <button
-                      className="btn btn-ghost"
-                      onClick={() => onMarkWatched?.(progressKey)}
+                      className="btn btn-secondary btn-restricted"
+                      disabled
+                      title="Inappropriate for your age rating setting"
                     >
-                      ✓ Mark Watched
+                      🔒 Trailer
                     </button>
-                    {hasProgress && (
+                  ) : (
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => setShowTrailer(true)}
+                    >
+                      <TrailerIcon /> Trailer
+                    </button>
+                  ))}
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowCast(true)}
+                >
+                  <CastIcon /> Cast
+                </button>
+                <button className="btn btn-secondary" onClick={onSave}>
+                  {isSaved ? <BookmarkFillIcon /> : <BookmarkIcon />}
+                  {isSaved ? "Saved" : "Save"}
+                </button>
+                {!isUnreleased &&
+                  (isWatched ? (
+                    <button
+                      className="btn btn-ghost watched-btn"
+                      onClick={() => onMarkUnwatched?.(progressKey)}
+                    >
+                      <WatchedIcon size={16} /> Watched
+                    </button>
+                  ) : (
+                    <>
                       <button
                         className="btn btn-ghost"
-                        style={{ fontSize: 13 }}
-                        onClick={() => {
-                          saveProgress(progressKey, 0);
-                          storage.set("dlTime_" + progressKey, null);
-                        }}
+                        onClick={() => onMarkWatched?.(progressKey)}
                       >
-                        ⊘ Not Started
+                        ✓ Mark as watched
                       </button>
-                    )}
-                  </>
-                ))}
-              <button className="btn btn-ghost" onClick={onBack}>
-                <BackIcon /> Back
-              </button>
+                      {hasProgress && (
+                        <button
+                          className="btn btn-ghost"
+                          title="Clear saved progress and mark as not started"
+                          onClick={() => {
+                            saveProgress(progressKey, 0);
+                            storage.set("dlTime_" + progressKey, null);
+                          }}
+                        >
+                          Reset progress
+                        </button>
+                      )}
+                    </>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
@@ -1342,6 +1362,50 @@ export default function MoviePage({
             ))}
           </div>
         </div>
+      )}
+
+      {castList.length > 0 && (
+        <section className="detail-cast">
+          <div className="detail-cast__head">
+            <h2 className="detail-cast__title">Cast</h2>
+            <button
+              className="detail-cast__all"
+              onClick={() => setShowCast(true)}
+            >
+              See all
+            </button>
+          </div>
+          <div className="detail-cast__row">
+            {castList.map((p) => (
+              <div
+                key={p.id ?? p.name}
+                className="detail-cast__person"
+                role="button"
+                tabIndex={0}
+                onClick={() => setShowCast(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setShowCast(true);
+                }}
+              >
+                <div className="detail-cast__photo">
+                  {p.profile_path ? (
+                    <img
+                      src={imgUrl(p.profile_path, "w185")}
+                      alt=""
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span>{(p.name || "?").charAt(0)}</span>
+                  )}
+                </div>
+                <div className="detail-cast__name">{p.name}</div>
+                {p.character && (
+                  <div className="detail-cast__role">{p.character}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
       )}
 
       {collection && onSelect && (

@@ -8,6 +8,7 @@ import { useRatings, getRatingForItem } from "../utils/useRatings";
 import { isRestricted } from "../utils/ageRating";
 import { storage } from "../utils/storage";
 import { loadHomeLayout, loadHomeViewMode } from "../utils/homeLayout";
+import { GenreBar, GenreRows, GenreResults } from "../components/GenreBrowse";
 
 /**
  * Extract up to `count` unique, recently watched items from the user's
@@ -67,6 +68,7 @@ export default function HomePage({
 
   const [recommendedItems, setRecommendedItems] = useState([]);
   const [topRatedItems, setTopRatedItems] = useState([]);
+  const [activeGenre, setActiveGenre] = useState(null);
 
   // Load layout config (order + visibility) once on mount
   const [layout] = useState(() => loadHomeLayout());
@@ -328,8 +330,13 @@ export default function HomePage({
         </div>
       )}
 
-      {/* ── Rows in user-configured order ── */}
-      {rowOrder.map((id) => {
+      {/* ── Genre chips (under the hero) ── */}
+      {!offline && !loading && apiKey && (
+        <GenreBar active={activeGenre} onChange={setActiveGenre} />
+      )}
+
+      {/* ── Rows in user-configured order (hidden while a genre is picked) ── */}
+      {!activeGenre && rowOrder.map((id) => {
         if (!rowVisible[id]) return null;
 
         if (id === "continue") {
@@ -497,6 +504,29 @@ export default function HomePage({
 
         return null;
       })}
+
+      {/* ── Genre results / genre rows ── */}
+      {!offline && !loading && apiKey && activeGenre != null && (
+        <GenreResults
+          key={activeGenre}
+          genreId={activeGenre}
+          apiKey={apiKey}
+          onSelect={onSelect}
+          watched={watched}
+          onMarkWatched={onMarkWatched}
+          onMarkUnwatched={onMarkUnwatched}
+        />
+      )}
+      {!offline && !loading && apiKey && activeGenre == null && (
+        <GenreRows
+          apiKey={apiKey}
+          onSeeAll={setActiveGenre}
+          onSelect={onSelect}
+          watched={watched}
+          onMarkWatched={onMarkWatched}
+          onMarkUnwatched={onMarkUnwatched}
+        />
+      )}
     </div>
   );
 }

@@ -380,11 +380,26 @@ export default function DownloadsPage({
           }}
         />
       )}
-      <div className="dl-page__title">DOWNLOADS</div>
-      <div className="dl-page__subtitle">
-        {active.length > 0 ? `${active.length} active` : "No active downloads"}{" "}
-        · {allLocalItemsRaw.length} completed
-      </div>
+      <header className="dl-hero">
+        <div className="dl-hero__text">
+          <h1 className="dl-page__title">Downloads</h1>
+          <p className="dl-page__subtitle">
+            Videos saved to this Mac, ready to watch offline.
+          </p>
+        </div>
+        <div className="dl-stats">
+          <div
+            className={`dl-stat${active.length > 0 ? " dl-stat--live" : ""}`}
+          >
+            <span className="dl-stat__num">{active.length}</span>
+            <span className="dl-stat__label">Downloading</span>
+          </div>
+          <div className="dl-stat">
+            <span className="dl-stat__num">{allLocalItemsRaw.length}</span>
+            <span className="dl-stat__label">Saved</span>
+          </div>
+        </div>
+      </header>
 
       {/* ── Downloads page search bar ───────────────────────────────────── */}
       {searchOpen && (
@@ -525,7 +540,7 @@ export default function DownloadsPage({
         </div>
       )}
 
-      <div>
+      <div className="dl-page__section dl-local">
         <div className="dl-page__local-header">
           <div className="settings-section-title dl-section-title--inline">
             Local Files
@@ -648,13 +663,39 @@ export default function DownloadsPage({
       {downloads.length === 0 &&
         localFiles.length === 0 &&
         active.length === 0 && (
-          <div className="empty-state">
-            <DownloadIcon />
-            <h3>No downloads yet</h3>
-            <p>
-              Start a download from any movie or series page, or scan a folder
-              to find local video files.
+          <div className="dl-empty">
+            <div className="dl-empty__icon">
+              <DownloadIcon />
+            </div>
+            <h3 className="dl-empty__title">Your offline shelf is empty</h3>
+            <p className="dl-empty__text">
+              Download any movie or episode from its page and it will show up
+              here. Already have videos on this Mac? Point Lumora at the folder
+              and they appear too.
             </p>
+            {isElectron && (
+              <div className="dl-empty__actions">
+                <button
+                  className="lib-play"
+                  onClick={async () => {
+                    const folder = await window.electron.pickFolder();
+                    if (folder) {
+                      setScanFolder(folder);
+                      storage.set("downloadPath", folder);
+                    }
+                  }}
+                >
+                  Choose a folder
+                </button>
+                <button
+                  className="dl-empty__ghost"
+                  onClick={handleScanFolder}
+                  disabled={scanning || !scanFolder}
+                >
+                  {scanning ? "Scanning…" : "Scan folder"}
+                </button>
+              </div>
+            )}
           </div>
         )}
     </div>

@@ -381,11 +381,16 @@ function Toggle({ value, onChange, title }) {
       onClick={() => onChange(!value)}
       title={title}
       style={{
-        background: value ? "var(--red)" : "var(--surface2)",
-        border: "1px solid " + (value ? "var(--red)" : "var(--border)"),
+        background: value
+          ? "linear-gradient(135deg, #ffb347, #ff5a3c)"
+          : "rgba(255,255,255,0.12)",
+        border:
+          "1px solid " +
+          (value ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.14)"),
+        boxShadow: value ? "0 4px 14px -4px rgba(255,90,60,0.7)" : "none",
         borderRadius: 20,
-        width: 40,
-        height: 22,
+        width: 46,
+        height: 26,
         cursor: "pointer",
         position: "relative",
         flexShrink: 0,
@@ -395,13 +400,13 @@ function Toggle({ value, onChange, title }) {
       <span
         style={{
           position: "absolute",
-          top: 2,
-          left: value ? 20 : 2,
-          width: 16,
-          height: 16,
+          top: 3,
+          left: value ? 23 : 3,
+          width: 18,
+          height: 18,
           background: "#fff",
           borderRadius: "50%",
-          transition: "left 0.2s",
+          transition: "left 0.25s cubic-bezier(0.22, 0.8, 0.3, 1)",
           boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
         }}
       />
@@ -2492,38 +2497,90 @@ function DiscordRpcSection() {
 // ── Section Group Header ─────────────────────────────────────────────────────
 function SectionGroupHeader({ title, subtitle }) {
   return (
-    <div style={{ marginBottom: 32, marginTop: 4 }}>
+    <div style={{ marginBottom: 28 }}>
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 14,
-          marginBottom: subtitle ? 6 : 0,
+          fontFamily: "var(--font-display)",
+          fontSize: 26,
+          fontWeight: 800,
+          letterSpacing: "-0.03em",
+          lineHeight: 1.1,
+          color: "#fff",
+          marginBottom: subtitle ? 8 : 0,
         }}
       >
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 16,
-            letterSpacing: 2,
-            color: "var(--red)",
-            textTransform: "uppercase",
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-          }}
-        >
-          {title}
-        </div>
-        <div
-          style={{ flex: 1, height: 1, background: "rgba(229,9,20,0.18)" }}
-        />
+        {title}
       </div>
       {subtitle && (
-        <div style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.5 }}>
+        <div
+          style={{
+            fontSize: 14,
+            color: "rgba(255,255,255,0.55)",
+            lineHeight: 1.5,
+          }}
+        >
           {subtitle}
         </div>
       )}
     </div>
+  );
+}
+
+// ── Sticky section rail (desktop navigation) ─────────────────────────────────
+const RAIL_ITEMS = [
+  { id: "updates", label: "General" },
+  { id: "content", label: "Content" },
+  { id: "playback", label: "Playback" },
+  { id: "subtitles", label: "Subtitles" },
+  { id: "downloads", label: "Downloads" },
+  { id: "notifications", label: "Notifications" },
+  { id: "discordRpc", label: "Discord" },
+  { id: "interface", label: "Interface" },
+  { id: "library", label: "Library" },
+  { id: "backup", label: "Backup" },
+  { id: "storage", label: "Storage" },
+];
+
+function SettingsRail({ sectionRefs }) {
+  const [active, setActive] = useState(RAIL_ITEMS[0].id);
+  const refsRef = useRef(sectionRefs);
+  refsRef.current = sectionRefs;
+
+  useEffect(() => {
+    const main = document.querySelector(".main");
+    if (!main) return undefined;
+    const onScroll = () => {
+      const probe = main.getBoundingClientRect().top + 190;
+      let current = RAIL_ITEMS[0].id;
+      for (const { id } of RAIL_ITEMS) {
+        const el = refsRef.current[id]?.current;
+        if (el && el.getBoundingClientRect().top <= probe) current = id;
+      }
+      setActive(current);
+    };
+    onScroll();
+    main.addEventListener("scroll", onScroll, { passive: true });
+    return () => main.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const go = (id) => {
+    const el = refsRef.current[id]?.current;
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <nav className="settings-rail" aria-label="Settings sections">
+      {RAIL_ITEMS.map(({ id, label }) => (
+        <button
+          key={id}
+          className={`settings-rail__item${active === id ? " is-active" : ""}`}
+          onClick={() => go(id)}
+          aria-current={active === id ? "true" : undefined}
+        >
+          {label}
+        </button>
+      ))}
+    </nav>
   );
 }
 
@@ -3635,22 +3692,15 @@ export default function SettingsPage({
         platform={platform}
       />
 
+      <div className="settings-layout">
+        <SettingsRail sectionRefs={sectionRefs} />
       <div
         ref={contentRef}
-        className="fade-in"
+        className="fade-in settings-content"
         style={{ padding: "40px 48px 80px" }}
       >
         {/* Page title */}
-        <div
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: 48,
-            letterSpacing: 1,
-            marginBottom: 6,
-          }}
-        >
-          SETTINGS
-        </div>
+        <div className="settings-page-title">Settings</div>
         <div style={{ color: "var(--text3)", fontSize: 14, marginBottom: 48 }}>
           App configuration for Lumora
         </div>
@@ -4521,6 +4571,7 @@ export default function SettingsPage({
             </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );
