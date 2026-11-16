@@ -5,6 +5,9 @@ on:
       - windows-installer-build
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-windows:
     runs-on: windows-latest
@@ -26,3 +29,9 @@ jobs:
           path: dist/*.exe
           if-no-files-found: error
           retention-days: 14
+      - name: Attach installer to the Lumora v2.7.1 release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.7.1
+          files: dist/*.exe
+          fail_on_unmatched_files: true
