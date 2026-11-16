@@ -1,6 +1,6 @@
 {
   "name": "lumora",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Lumora Desktop App",
   "author": {
     "name": "Febrian Aulia",
@@ -169,11 +169,11 @@
       "icon": "public/sized",
       "desktop": {
         "entry": {
-          "Name": "Streambert",
-          "Comment": "Streambert Desktop App",
+          "Name": "Lumora",
+          "Comment": "Lumora Desktop App",
           "Categories": "AudioVideo;Video;Player;Multimedia;Internet;",
-          "Icon": "streambert",
-          "StartupWMClass": "Streambert"
+          "Icon": "lumora",
+          "StartupWMClass": "Lumora"
         }
       }
     },

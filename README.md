@@ -1,249 +1,252 @@
-[![Downloads@latest](https://img.shields.io/github/downloads/truelockmc/streambert/latest/total?style=for-the-badge)](https://codeberg.org/truelockmc/streambert/releases/latest/)
-[![Release Version Badge](https://img.shields.io/github/v/release/truelockmc/streambert?style=for-the-badge)](https://github.com/truelockmc/streambert/releases)
-[![Issues Badge](https://img.shields.io/github/issues/truelockmc/streambert?style=for-the-badge)](https://github.com/truelockmc/streambert/issues)
-[![Closed Issues Badge](https://img.shields.io/github/issues-closed/truelockmc/streambert?color=%238256d0&style=for-the-badge)](https://github.com/truelockmc/streambert/issues?q=is%3Aissue+is%3Aclosed)<br>
 
-[![GitHub](https://img.shields.io/badge/GitHub-truelockmc%2Fstreambert-181717?style=for-the-badge&logo=github)](https://github.com/truelockmc/streambert)
-[![Codeberg](https://img.shields.io/badge/Codeberg-truelockmc%2Fstreambert-2185D0?style=for-the-badge&logo=codeberg)](https://codeberg.org/truelockmc/streambert)
-[![AUR Version](https://img.shields.io/aur/version/streambert-bin?style=for-the-badge&logo=archlinux)](https://aur.archlinux.org/packages/streambert-bin)
-# Streambert
-A cross-platform Electron Desktop App to stream and download any Movie, TV Series or Anime in the World. Zero Ads and Tracking[*](#privacy-disclaimer) <br></br>
-<a href="https://trendshift.io/repositories/31115" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/31115" alt="truelockmc%2Fstreambert | Trendshift" width="250" height="55"/></a>
+# Lumora
 
-![Logo](public/logo.svg)
+<p align="center">
+  <img src="public/logo.svg" alt="Lumora Logo" width="360" />
+</p>
 
-[Installation](#requirements)
+<h1 align="center">Lumora</h1>
 
-## Why Streambert?
-- 🎦 **Streaming:** Stream any Movie, Anime or TV Series from around the World.
-- 📥 **Downloading:** Download anything you want to watch.
-- 📃 **Subtitles:** Download and manage Subtitles.
-- ⚙️ **Customizability:** Customize the Interface and Features to your unique needs.
-- 📚 **Library:** Track what you watched, save stuff you want to watch and manage your Downloads.
-- ✨ **Trending:** Discover new things to Watch every Day.
-- 🛡️ **Privacy:** Completely Ads and Tracker free, forever.
-- ⚡ **Speed:** Stream faster than any Browser can, download with multithreading.
+<p align="center">
+  <strong>A Cinematic Media Experience</strong>
+</p>
 
-![Explore new Stuff](screenshots/trending.png)
-![Watch TV Series](screenshots/series.png)
-![Watch Movies](screenshots/movie.png)
-![Watch Anime](screenshots/anime.png)
-![Without any Ads or Trackers](screenshots/adblock.png)
-![Customize](screenshots/customize-1.png)
-![Customize](screenshots/customize-2.png)
-![Download Subtitles](screenshots/subs.png)
-![Download Everything](screenshots/download.png)
----
-[![Stargazers](https://reporoster.com/stars/dark/truelockmc/streambert)](https://github.com/truelockmc/streambert/stargazers)
----
-## Streaming
-The Application gets video streams from different hosters/aggregators, see [PLAYER_SOURCES](src/utils/api.js). <br></br>
-It fetches Information for Images, Info Texts, Search and Homepage from [tmdb](https://www.themoviedb.org/).
+<p align="center">
+  Discover. Watch. Enjoy.
+</p>
+
+<p align="center">
+  A modern desktop media application designed to bring movies, TV series, and anime together in one cinematic experience.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-macOS-lightgrey?style=for-the-badge&logo=apple" />
+  <img src="https://img.shields.io/badge/Electron-Desktop-blue?style=for-the-badge&logo=electron" />
+  <img src="https://img.shields.io/badge/React-UI-61DAFB?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/License-GPL--3.0-purple?style=for-the-badge" />
+</p>
 
 ---
 
-## Downloading
-You can download those Video Streams because the Program sources Links to their .m3u8 Playlist Files ([similar to this Browser Extension](https://addons.mozilla.org/en-US/firefox/addon/m3u8-link-finder/)). <br></br>
-Once you click 'Download' these Links are used to download the Full Movie/TV Episode using [this Program](https://github.com/truelockmc/vid-dl-cli-only). You can then watch them In-App or take the Files on any Storage Medium you want.
+## Overview
+
+**Lumora** is a cinematic desktop media application built with Electron and React.
+
+Designed around a modern entertainment experience, Lumora brings media discovery, streaming, downloads, and personal library management into one elegant desktop application.
+
+With an immersive interface, smooth navigation, and customizable settings, Lumora aims to make entertainment feel effortless.
+
+## Features
+
+- 🎬 **Media Discovery** — Explore movies, TV series, and anime.
+- ▶️ **Streaming** — Watch media through supported third-party sources.
+- 📥 **Download Manager** — Download and organize supported media.
+- 💬 **Subtitle Support** — Download and manage subtitles.
+- 📚 **Personal Library** — Keep track of watched and saved content.
+- ✨ **Trending** — Discover popular and trending entertainment.
+- 🎨 **Customization** — Personalize the interface and application settings.
+- 🎮 **Gamepad Support** — Navigate supported features using a controller.
+- ⌨️ **Keyboard Shortcuts** — Navigate and control the application efficiently.
+- 🎵 **Discord Rich Presence** — Display supported media activity on Discord.
 
 ---
 
-## Anime
-You can also watch Anime, the App checks if a Movie or Series is an Anime and then sources its Metadata from [AniList](https://anilist.co/) instead of [tmdb](https://www.themoviedb.org/). <br></br>
-Media Files for Animes are scraped from AllManga.to (i stole this mechanic from [ani-cli](https://github.com/pystardust/ani-cli)). The App directly gets .mp4 Files and doesnt evem show you the AllManga website, you can also download these Files, just like any other Content.
+## Screenshots
 
+<p align="center">
+  <img src="screenshots/lumora-home.png" width="100%" alt="Lumora Home screen showing movie discovery and categories" />
+  <br/>
+  <em>Lumora Home — discover movies and browse categories, including Indonesian films.</em>
+</p>
+
+---
+
+## Technology
+
+| Technology | Purpose |
+|---|---|
+| Electron | Desktop application framework |
+| React | User interface |
+| Vite | Development and build tooling |
+| JavaScript | Application logic |
+| CSS | Interface styling |
+| TMDB API | Media metadata |
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/) (>=22.12.0) installed (only if you aren't using [prebuilt Binaries](https://codeberg.org/truelockmc/streambert/releases/latest))
-- A free TMDB API Read Access Token ([Guide on how to get one](tmdb-tutorial.md))
-- For downloading, [this Program](https://github.com/truelockmc/vid-dl-cli-only/releases/latest) somewhere on your PC and [ffmpeg](https://ffmpeg.org/download.html) installed
+Before running Lumora from source, make sure you have:
+
+- [Node.js](https://nodejs.org/) version 22.12.0 or newer.
+- npm package manager.
+- A TMDB API Read Access Token.
+- [FFmpeg](https://ffmpeg.org/download.html) for supported media operations.
+
+See [TMDB Tutorial](tmdb-tutorial.md) for instructions on obtaining an API token.
 
 ---
+
 ## Installation
+
 On first launch you'll be prompted to enter your TMDB API key. ([Guide on how to get one](tmdb-tutorial.md))
+
 It's saved locally, you only need to do this once.
 
-### Linux
+### macOS
 
-A Linux installer is not currently provided.
+1. Visit the [Lumora Releases](https://github.com/febrianaulia/Lumora/releases) page.
+2. Download the latest available macOS `.dmg` installer.
+3. Open the downloaded DMG file.
+4. Drag Lumora into the Applications folder.
+5. Launch Lumora.
+
+If macOS blocks the application because it is not signed and notarized, authorization may be required through System Settings → Privacy & Security.
 
 ### Windows (x64)
 
-1. Download [`Lumora.Setup.2.7.0.exe`](https://github.com/febrianaulia/Lumora/releases/tag/v2.7.0) from the official Lumora release.
-2. Run the installer. It is unsigned, so Windows SmartScreen may show a warning. Only download it from the official release linked above.
+1. Visit [Lumora Releases](https://github.com/febrianaulia/Lumora/releases).
+2. Download the latest Windows installer (`Lumora.Setup-*.exe`).
+3. Run the installer and follow the installation instructions.
+4. Launch Lumora from the Start menu or desktop shortcut.
 
-### macOS
-Download the latest `Streambert-*-universal.dmg` from the [Releases](https://codeberg.org/truelockmc/streambert/releases/latest) page, open it and drag Streambert to your Applications folder.
+**Note:** The Windows installer is currently unsigned. Windows SmartScreen may display a security warning when launching the installer. Only download Lumora from the official GitHub repository.
+
+### Linux
+
+A Linux installer is not currently available. Linux support may be provided in future releases.
 
 ---
 
-
 ## Building from Source
-1. Install dependencies:
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/febrianaulia/Lumora.git
+cd Lumora
+```
+
+### 2. Install dependencies
+
 ```bash
 npm install
 ```
-2. Build
+
+### 3. Start the application
+
+Use the development command configured in `package.json`.
+
 ```bash
-npm run dist:win   
+npm run dev
 ```
-or
-```bash
-npm run dist:linux 
-```
-or (for Arch Linux)
-```bash
-npm run dist:arch
-```
-or (for an AppImage only)
-```bash
-npm run dist:appimage
-```
-or (for a .deb only)
-```bash
-npm run dist:deb
-```
-or (for a .rpm only)
-```bash
-npm run dist:rpm
-```
-or (for macOS)
+
+### 4. Build for macOS
+
 ```bash
 npm run dist:mac
 ```
-or (build all platforms at once)
+
+### Other build commands
+
 ```bash
-npm run dist
+npm run dist:win
+npm run dist:linux
+npm run dist:deb
+npm run dist:rpm
+npm run dist:appimage
 ```
 
-> [!IMPORTANT]
-> If you are building/installing on Arch Linux and encounter errors, you may need these libraries:
-> - **libcrypt.so.1 error:** `sudo pacman -S libxcrypt-compat`
-> - **http-parser dependency error:** `yay -S http-parser` (from AUR)
+Refer to `package.json` for the available scripts.
+
+---
+
+## Automated Builds
+
+Lumora uses GitHub Actions to automate application builds.
+
+The build workflow can:
+
+- Install project dependencies.
+- Prepare the Electron environment.
+- Build the application.
+- Generate macOS installation packages.
+- Upload build artifacts.
+
+Visit [GitHub Actions](https://github.com/febrianaulia/Lumora/actions) to view workflow history and available artifacts.
+
+---
+
+## About the Developer
+
+<p align="center">
+  <strong>Febrian Aulia</strong>
+  <br/>
+  Founder & Developer of Lumora
+  <br/>
+  📍 Bukittinggi, Indonesia 🇮🇩
+</p>
+
+<p align="center">
+  Lumora is an independent project developed with a passion for technology, software development, and cinematic entertainment experiences.
+</p>
+
+---
+
+## Credits & Acknowledgements
+
+Lumora is an independently maintained modified derivative of the open-source **[Streambert](https://github.com/truelockmc/streambert)** project.
+
+We sincerely appreciate the original developer, [@truelockmc](https://github.com/truelockmc), and all contributors for their work and contributions to the open-source community.
+
+Lumora introduces its own visual identity, interface modifications, and further development while retaining the original project's applicable license and attribution requirements.
+
+The original project and its respective authors retain credit for their contributions.
+
+Lumora is not an official product or release of the original Streambert developers.
+
+---
 
 ## License
-This project is open-source software licensed under the GNU General Public License v3.0 [(GPL-3.0)](LICENSE).
 
-Forks may be created but they MUST stay open-sourced.
+Lumora is distributed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
-## Contributing
-Everyone is welcome to contribute to this project.
-Before contributing please make sure to read the [Contributing Guidelines](CONTRIBUTING.md) and act accordingly.
+See the [LICENSE](LICENSE) file for the complete license terms.
 
-## Privacy Disclaimer
-Streambert itself does not collect ANY data. There is no centralized service which the app relies on.
-However, the streaming sources and github (for downloading updates in-app) may still collect your data.
+As a derivative project, Lumora respects the applicable obligations of the original GPL-3.0 license, including preservation of copyright notices and license information.
 
-Streambert has built-in tracker/- and adblocking, but obviously that is not perfect.
+---
 
 ## Legal Disclaimer
 
-**IMPORTANT: This application is for educational and personal use only.**
+Lumora does not host or store third-party copyrighted media content.
 
-- Streambert does not host, store, or distribute any copyrighted content
-- All content is sourced from third-party providers and websites
-- Users are solely responsible for ensuring they have legal rights to access any content
-- The developer does not endorse or encourage copyright infringement
-- Users must comply with all applicable laws in their jurisdiction
-- Any legal issues should be directed to the actual content providers
-- This app functions as a search engine aggregator only
-- No copyrighted material is stored on my side
+Media availability depends on external providers and services. Users are responsible for ensuring that their use of the application complies with applicable laws and the terms of those services.
 
-## Legal Notice
+## Privacy
 
-This application is provided "as is" for educational purposes. The developer:
-- Does not claim ownership of any content
-- Does not profit from copyrighted material in any way
-- Does not control third-party content providers
-- Encourages users to support content creators through legal means
+Lumora does not operate its own centralized media hosting service.
 
-[![RepoStars](https://repostars.dev/api/embed?repo=truelockmc%2Fstreambert&theme=dark)](https://repostars.dev/?repos=truelockmc%2Fstreambert&theme=dark)
+However, external APIs, media providers, and integrated third-party services may process user requests and associated information under their own privacy policies.
 
-<details>
-    <summary>Project Structure</summary>
-    
-```
-Project Root
-├── index.html
-├── main.js
-├── package.json
-├── preload.js
-├── vite.config.js
-├── LICENSE
-├── README.md
-├── public
-│   ├── icon.png
-│   ├── installer-sidebar.bmp
-│   └── logo.svg
-├── screenshots
-│   ├── adblock.png
-│   ├── anime.png
-│   ├── api-settings_tmdb.png
-│   ├── application_tmdb.png
-│   ├── download.png
-│   ├── icon.png
-│   ├── movie.png
-│   ├── personal-use_tmdb.png
-│   ├── series.png
-│   ├── setup.png
-│   ├── signup_tmdb.png
-│   ├── subs.png
-│   ├── token_tmdb.png
-│   └── trending.png
-└── src
-    ├── App.jsx
-    ├── main.jsx
-    ├── components
-    │   ├── BlockedStatsModal.jsx
-    │   ├── CloseConfirmModal.jsx
-    │   ├── DownloadModal.jsx
-    │   ├── ErrorBoundary.jsx
-    │   ├── Icons.jsx
-    │   ├── KeyboardShortcutsModal.jsx
-    │   ├── MediaCard.jsx
-    │   ├── SearchModal.jsx
-    │   ├── SetupScreen.jsx
-    │   ├── Sidebar.jsx
-    │   ├── SubtitleDownloaderModal.jsx
-    │   ├── TrailerModal.jsx
-    │   ├── TrendingCarousel.jsx
-    │   ├── UpdateModal.jsx
-    │   └── WindowTitlebar.jsx
-    ├── ipc
-    │   ├── allmanga.js
-    │   ├── blockStats.js
-    │   ├── downloads.js
-    │   ├── player.js
-    │   ├── storage.js
-    │   └── subtitles.js
-    ├── pages
-    │   ├── DownloadsPage.jsx
-    │   ├── HomePage.jsx
-    │   ├── LibraryPage.jsx
-    │   ├── MoviePage.jsx
-    │   ├── SettingsPage.jsx
-    │   └── TVPage.jsx
-    ├── styles
-    │   ├── global.css
-    │   └── fonts
-    │       ├── bebas-neue-regular.woff2
-    │       ├── dm-sans-300.woff2
-    │       ├── dm-sans-500.woff2
-    │       ├── dm-sans-600.woff2
-    │       └── dm-sans-regular.woff2
-    └── utils
-        ├── ageRating.js
-        ├── aniSkip.js
-        ├── api.js
-        ├── appearance.js
-        ├── backup.js
-        ├── episodeMappings.js
-        ├── homeLayout.js
-        ├── storage.js
-        ├── subtitles.js
-        ├── updates.js
-        ├── useBlockedStats.js
-        └── useRatings.js
-```
-</details>
+---
+
+<p align="center">
+  <img src="public/logo.svg" alt="Lumora Logo" width="140" />
+</p>
+
+<h2 align="center">Lumora</h2>
+
+<p align="center">
+  <strong>A better way to experience entertainment.</strong>
+</p>
+
+<p align="center">
+  Created with passion in Bukittinggi, Indonesia.
+</p>
+
+<p align="center">
+  <a href="https://github.com/febrianaulia/Lumora">GitHub Repository</a>
+  ·
+  <a href="https://github.com/febrianaulia/Lumora/releases">Releases</a>
+  ·
+  <a href="https://github.com/febrianaulia/Lumora/issues">Report an Issue</a>
+</p>

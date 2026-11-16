@@ -22,7 +22,7 @@ jobs:
       - name: Upload installer as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lumora-windows-x64-v2.7.0
+          name: lumora-windows-x64-v2.7.1
           path: dist/*.exe
           if-no-files-found: error
           retention-days: 14
