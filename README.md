@@ -54,33 +54,33 @@ With an immersive interface, smooth navigation, and customizable settings, Lumor
 ## Screenshots
 
 <p align="center">
-  <strong>Home</strong><br/>
   <img src="screenshots/lumora-home.png" width="100%" alt="Lumora Home with featured movie and recommendations" />
+  <br/><strong>Home</strong>
 </p>
 
 <p align="center">
-  <strong>Library</strong><br/>
   <img src="screenshots/lumora-library.png" width="100%" alt="Lumora Library showing watch history" />
+  <br/><strong>Library</strong>
 </p>
 
 <p align="center">
-  <strong>Downloads</strong><br/>
   <img src="screenshots/lumora-downloads.png" width="100%" alt="Lumora Downloads page" />
+  <br/><strong>Downloads</strong>
 </p>
 
 <p align="center">
-  <strong>Settings</strong><br/>
   <img src="screenshots/lumora-settings.png" width="100%" alt="Lumora application settings" />
+  <br/><strong>Settings</strong>
 </p>
 
 <p align="center">
-  <strong>Anime</strong><br/>
   <img src="screenshots/lumora-anime.png" width="100%" alt="Demon Slayer anime movie details in Lumora" />
+  <br/><strong>Anime</strong>
 </p>
 
 <p align="center">
-  <strong>Kategori Action</strong><br/>
   <img src="screenshots/lumora-category-action.png" width="100%" alt="Lumora Action movie category" />
+  <br/><strong>Kategori Action</strong>
 </p>
 
 ---
